@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; }
+    #messages { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; }
+    input, button { padding: 8px; margin: 5px 0; width: 100%; }
+  </style>
+</head>
+<body>
+
+<h2>💬 Chat</h2>
+
+<input id="author" placeholder="Ton pseudo" />
+<div id="messages"></div>
+<input id="content" placeholder="Ton message" />
+<button onclick="sendMessage()">Envoyer</button>
+
+<script>
+const BACKEND_URL = "https://TON-BACKEND.onrender.com";
+
+async function loadMessages() {
+  const res = await fetch(`${BACKEND_URL}/api/messages`);
+  const data = await res.json();
+  const box = document.getElementById("messages");
+  box.innerHTML = data.map(m =>
+    `<p><b>${m.author}</b> (${m.time}) : ${m.content}</p>`
+  ).join("");
+}
+
+async function sendMessage() {
+  const author = document.getElementById("author").value;
+  const content = document.getElementById("content").value;
+
+  await fetch(`${BACKEND_URL}/api/messages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ author, content })
+  });
+
+  document.getElementById("content").value = "";
+  loadMessages();
+}
+
+setInterval(loadMessages, 4000);
+loadMessages();
+</script>
+
+</body>
+</html>
+

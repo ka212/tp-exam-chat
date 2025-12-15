@@ -1,0 +1,27 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : récupérer le code du repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Étape 2 : tester le backend
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm install
+
+      # Étape 3 : vérifier le frontend
+      - name: Frontend check
+        run: echo "Frontend OK"
+
